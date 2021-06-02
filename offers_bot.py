@@ -11,7 +11,7 @@ class MyClient(discord.Client):
         print('Logged on as', self.user)
         await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="https://store.steampowered.com/specials/"))
         channel = client.get_channel(846714712698650634)
-        # await channel.send("Hello")
+
         deals = get_offers()
         deal = deals.get('top-sellers')
         await channel.send("Today's Deals!")
