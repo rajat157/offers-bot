@@ -5,6 +5,7 @@ import os
 from time import sleep
 import logging
 from signal import signal, SIGINT, SIGTERM
+import subprocess as sp
 
 logging.basicConfig(level=logging.INFO)
 
@@ -14,9 +15,9 @@ class OffersBot:
         logging.info(f"[*] Signal received ({signal_received})....Exiting.")
         exit()
 
-    def __init__(self, channel_name, bot_token):
+    def __init__(self, channel_id, bot_token):
 
-        self.channel_name = channel_name
+        self.channel_id = int(channel_id)
         self.token = bot_token
 
         # Set up Discord
@@ -40,35 +41,38 @@ class OffersBot:
             logging.info("[+] Bot on_ready. Connected to Discord")
             logging.info("[*] Name: {}".format(self.discord_bot.user.name))
             logging.info("[*] ID: {}".format(self.discord_bot.user.id))
+            await self.discord_bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="https://store.steampowered.com/specials/"))
+            await get_deals(self.channel_id)
 
         @self.discord_bot.event
         async def on_message(message):
             
-            if message.author.bot or str(message.channel) != self.channel_name:
+            if message.author.bot or message.channel.id != self.channel_id:
                 return
 
             if message.content is None:
                 logging.error("[-] Empty message received.")
                 return
 
-            if message.content in ['trending','top-sellers','most-popular','coming-soon']:
-
-                type = message.content
-                deals = get_offers(type=type)
-                for id in range(0,len(deals['name'])):
-                    embed=discord.Embed(
-                        title=deals['name'][id], 
-                        url=deals['link'][id], 
-                        description=f"Original Price (~~{deals['original_price'][id]}~~) Discount Price {deals['discount_price'][id]} **({deals['discount_pct'][id]})** "
-                        )
-                    embed.set_image(url=deals['icon'][id])
-                    await message.channel.send(embed=embed)
-                    emoji1 = '\N{THUMBS UP SIGN}'
-                    emoji2 = '\N{THUMBS DOWN SIGN}'
-                    await message.add_reaction(emoji1)
-                    await message.add_reaction(emoji2)
-
-                    sleep(2)
+        @self.discord_bot.event
+        async def get_deals(channel_id):
+            channel = await self.discord_bot.fetch_channel(channel_id)
+            deal_type = "top-sellers"
+            deals = get_offers(type=deal_type)
+            
+            embed=discord.Embed(
+                title="What's on Steam today",
+                url = "https://store.steampowered.com/specials/"
+                )
+            for id in range(0,len(deals['name'])):
+                embed.add_field(
+                    name=deals['name'][id],
+                    value=f"Original Price (~~{deals['original_price'][id]}~~) Discount Price {deals['discount_price'][id]} **({deals['discount_pct'][id]})**\n{deals['link'][id]}",
+                    # value = deals['link'][id],
+                    inline=False
+                )
+            await channel.send(embed=embed)
+                    
 
     def run(self):
         logging.info("[*] Now calling run()")
