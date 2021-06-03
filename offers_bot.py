@@ -56,6 +56,21 @@ class OffersBot:
             if message.content in ['trending','top-sellers','most-popular','coming-soon']:
 
                 type = message.content
+                deals = get_offers(type=type)
+                for id in range(0,len(deals['name'])):
+                    embed=discord.Embed(
+                        title=deals['name'][id], 
+                        url=deals['link'][id], 
+                        description=f"Original Price (~~{deals['original_price'][id]}~~) Discount Price {deals['discount_price'][id]} **({deals['discount_pct'][id]})** "
+                        )
+                    embed.set_image(url=deals['icon'][id])
+                    await message.channel.send(embed=embed)
+                    emoji1 = '\N{THUMBS UP SIGN}'
+                    emoji2 = '\N{THUMBS DOWN SIGN}'
+                    await message.add_reaction(emoji1)
+                    await message.add_reaction(emoji2)
+
+                    sleep(2)
 
     def run(self):
         logging.info("[*] Now calling run()")
