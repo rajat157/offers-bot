@@ -6,8 +6,6 @@ from time import sleep
 import logging
 from signal import signal, SIGINT, SIGTERM
 
-load_dotenv()
-
 logging.basicConfig(level=logging.INFO)
 
 class OffersBot:
