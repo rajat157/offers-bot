@@ -34,6 +34,8 @@ class OffersBot:
 
     def bot_events(self):
 
+        logging.info("[+] Setting up Discord events")
+
         @self.discord_bot.event
         async def on_ready():
 
@@ -42,5 +44,20 @@ class OffersBot:
             logging.info("[*] ID: {}".format(self.discord_bot.user.id))
 
         @self.discord_bot.event
-        async def on_message():
-            pass
+        async def on_message(message):
+            
+            if message.author.bot or str(message.channel) != self.channel_name:
+                return
+
+            if message.content is None:
+                logging.error("[-] Empty message received.")
+                return
+
+            if message.content in ['trending','top-sellers','most-popular','coming-soon']:
+
+                type = message.content
+
+    def run(self):
+        logging.info("[*] Now calling run()")
+        self.discord_bot.run(self.token)
+        logging.info("[*] Bot finished running.")
