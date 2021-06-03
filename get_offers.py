@@ -37,7 +37,7 @@ game_details = {
     }
 }
 
-def get_offers():
+def get_offers(type='trending'):
 
     URL = 'https://store.steampowered.com/specials/'
     page = requests.get(URL)
@@ -89,4 +89,5 @@ def get_offers():
                     game_details["coming-soon"]["original_price"].append(ori_price.text)
                     game_details["coming-soon"]["icon"].append(icon['src'])
 
-    return game_details
+    deals = game_details.get(type)
+    return deals
