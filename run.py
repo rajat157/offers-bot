@@ -1,5 +1,4 @@
 from os import environ
-from sys import argv
 from dotenv import load_dotenv
 from offers_bot import OffersBot
 

@@ -1,11 +1,7 @@
 from get_offers import get_offers
-from dotenv import load_dotenv
 import discord
-import os
-from time import sleep
 import logging
 from signal import signal, SIGINT, SIGTERM
-import subprocess as sp
 
 logging.basicConfig(level=logging.INFO)
 
