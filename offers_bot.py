@@ -9,8 +9,8 @@ import subprocess as sp
 
 logging.basicConfig(level=logging.INFO)
 
-class OffersBot:
 
+class OffersBot:
     def exit_handler(signal_received, frame):
         logging.info(f"[*] Signal received ({signal_received})....Exiting.")
         exit()
@@ -41,12 +41,18 @@ class OffersBot:
             logging.info("[+] Bot on_ready. Connected to Discord")
             logging.info("[*] Name: {}".format(self.discord_bot.user.name))
             logging.info("[*] ID: {}".format(self.discord_bot.user.id))
-            await self.discord_bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="https://store.steampowered.com/specials/"))
+            await self.discord_bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.watching,
+                    name="https://store.steampowered.com/specials/",
+                )
+            )
             await get_deals(self.channel_id)
+            await self.discord_bot.close()
 
         @self.discord_bot.event
         async def on_message(message):
-            
+
             if message.author.bot or message.channel.id != self.channel_id:
                 return
 
@@ -59,20 +65,19 @@ class OffersBot:
             channel = await self.discord_bot.fetch_channel(channel_id)
             deal_type = "top-sellers"
             deals = get_offers(type=deal_type)
-            
-            embed=discord.Embed(
+
+            embed = discord.Embed(
                 title="What's on Steam today",
-                url = "https://store.steampowered.com/specials/"
-                )
-            for id in range(0,len(deals['name'])):
+                url="https://store.steampowered.com/specials/",
+            )
+            for id in range(0, len(deals["name"])):
                 embed.add_field(
-                    name=deals['name'][id],
+                    name=deals["name"][id],
                     value=f"Original Price (~~{deals['original_price'][id]}~~) Discount Price {deals['discount_price'][id]} **({deals['discount_pct'][id]})**\n{deals['link'][id]}",
                     # value = deals['link'][id],
-                    inline=False
+                    inline=False,
                 )
             await channel.send(embed=embed)
-                    
 
     def run(self):
         logging.info("[*] Now calling run()")
