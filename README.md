@@ -14,7 +14,6 @@ OffersBot is a Discord bot which fetches offers on games from Steam store.
 ```bash
 cd offers-bot
 vim .env
-# Edit this file to add the Bot Secret Key & the discord channel name.
 BOT_TOKEN="Add your bot token here"
 BOT_CHANNEL="Add channel ID here"
 
