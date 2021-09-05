@@ -25,7 +25,7 @@ python run.py
 # Set a cronjob to run this bot on regular intervals.
 # Example:
 crontab -e
-0 17 * * *    cd offers-bot && python run.py  # This will run the bot at 5 PM everyday.
+0 17 * * *    cd offers-bot && python run.py  # This will run the bot at 5 PM, everyday.
 ```
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
