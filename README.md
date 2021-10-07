@@ -1,6 +1,6 @@
 # OffersBot
 
-OffersBot is a Discord bot which fetches offers on games from the Steam store.
+OffersBot is a Discord bot which fetches the list of games on discount from the Steam store.
 
 ## Installation
 
